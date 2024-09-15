@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        #searchBox {
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .song {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="searchBox">
+        <h1>Search for a Song</h1>
+        <input type="text" id="songName" placeholder="Enter song name">
+        <button onclick="searchSong()">Search</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function searchSong() {
+            const songName = document.getElementById('songName').value;
+            const response = await fetch(`/search?song=${songName}`);
+            const data = await response.json();
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (data.results) {
+                data.results.forEach(song => {
+                    const songElement = document.createElement('div');
+                    songElement.classList.add('song');
+                    songElement.innerHTML = `
+                        <p><strong>${song.name}</strong> by ${song.artist_name}</p>
+                        <a href="${song.download_link}" download>Download</a>
+                    `;
+                    resultsDiv.appendChild(songElement);
+                });
+            } else {
+                resultsDiv.innerHTML = 'No songs found';
+            }
+        }
+    </script>
+</body>
+  </html>
+  
